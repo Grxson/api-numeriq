@@ -9,3 +9,4 @@ Route::middleware(['auth:sanctum'])->get('/user', function (Request $request) {
 });
 
 Route::post('/crearTema', action: [TemaController::class, 'store'])->name('temas.store');
+Route::get('/temas', [TemaController::class, 'index'])->name('temas.index');

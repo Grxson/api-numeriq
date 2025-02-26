@@ -11,7 +11,12 @@ use Inertia\Inertia;
 class TemaController extends Controller
 {
 
-    public function index(Request $request) {}
+    public function index(Request $request)
+    {
+        $temas = Tema::all();
+
+        return response()->json(['temas' => $temas], 200);
+    }
     public function store(Request $request)
     {
         $request->validate([
