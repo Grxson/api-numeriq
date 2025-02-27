@@ -13,9 +13,28 @@ class TemaController extends Controller
 
     public function index(Request $request)
     {
-        $temas = Tema::all();
+        // Creación de los filtrados
+        $categoria = $request->input('categoria');
+        $nivel = $request->input('nivel');
+        $precioMin = $request->input('precio_min');
+        $precioMax = $request->input('precio_max');
 
-        return response()->json(['temas' => $temas], 200);
+        // Consultar los temas con os filtros
+        $query = Tema::query();
+        if ($categoria) {
+            $query->where('idCategoria', $categoria);
+        }
+        if ($nivel) {
+            $query->where('idNivel', $nivel);
+        }
+        if ($precioMin !== null && $precioMax !== null) {
+            $query->whereBetween('precio', [$precioMin, $precioMax]);
+        } elseif ($precioMax !== null) {
+            $query->where('precio', '<=', $precioMax);
+        }
+        $temas = $query->paginate(12);
+
+        return response()->json([$temas], 200);
     }
     public function store(Request $request)
     {
