@@ -32,7 +32,7 @@ class TemaController extends Controller
         } elseif ($precioMax !== null) {
             $query->where('precio', '<=', $precioMax);
         }
-        $temas = $query->paginate(12);
+        $temas = $query->paginate(6);
 
         return response()->json([$temas], 200);
     }
