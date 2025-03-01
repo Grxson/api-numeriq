@@ -29,12 +29,14 @@ class TemaController extends Controller
         }
         if ($precioMin !== null && $precioMax !== null) {
             $query->whereBetween('precio', [$precioMin, $precioMax]);
+        } elseif ($precioMin !== null) {
+            $query->where('precio', '<=', $precioMin);
         } elseif ($precioMax !== null) {
             $query->where('precio', '<=', $precioMax);
         }
         $temas = $query->paginate(6);
 
-        return response()->json([$temas], 200);
+        return response()->json($temas, 200);
     }
     public function store(Request $request)
     {
