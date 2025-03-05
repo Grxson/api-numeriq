@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
+use App\Http\Controllers\Auth\ProfileController;
 use App\Http\Controllers\Auth\RegisteredUserController;
 use App\Http\Controllers\NivelesEducativosController;
 use Illuminate\Http\Request;
@@ -17,10 +18,12 @@ Route::post('/login', [AuthenticatedSessionController::class, 'store'])
     ->middleware('guest')
     ->name('login');
 
+Route::middleware('auth:sanctum')->get('/user', [ProfileController::class, 'show']);
 
-Route::middleware(['auth:sanctum'])->get('/user', function (Request $request) {
-    return $request->user();
-});
+
+//Route::middleware(['auth:sanctum'])->get('/user', function (Request $request) {
+//    return $request->user();
+//});
 
 Route::post('/crearTema', action: [TemaController::class, 'store'])->name('temas.store');
 Route::get('/temas', [TemaController::class, 'index'])->name('temas.index');

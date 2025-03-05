@@ -17,9 +17,10 @@ class AuthenticatedSessionController extends Controller
     {
         $request->authenticate();
 
-        Auth::user();
+        $user = Auth::user();
+        $token = $user->createToken(config('app.name'))->plainTextToken;
 
-       return response()->json(['message' => 'Inicio de Sesión exitoso'], 201);
+       return response()->json(['message' => 'Inicio de Sesión exitoso', 'token' => $token], 201);
     }
 
     /**
