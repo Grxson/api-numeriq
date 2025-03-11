@@ -19,7 +19,12 @@ Route::post('/login', [AuthenticatedSessionController::class, 'store'])
     ->middleware('guest')
     ->name('login');
 
-Route::middleware('auth:sanctum')->get('/user', [ProfileController::class, 'show']);
+//Route::middleware('auth:sanctum')->get('/user', [ProfileController::class, 'show']);
+Route::middleware('auth:sanctum')->group(function () {
+    Route::get('/perfil', [ProfileController::class, 'show']);
+    Route::put('/perfil', [ProfileController::class, 'update']);
+    Route::delete('/perfil', [ProfileController::class, 'destroy']);
+});
 
 
 //Route::middleware(['auth:sanctum'])->get('/user', function (Request $request) {
