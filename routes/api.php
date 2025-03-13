@@ -3,21 +3,18 @@
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\Auth\ProfileController;
 use App\Http\Controllers\Auth\RegisteredUserController;
+use App\Http\Controllers\CategoriaController;
+use App\Http\Controllers\DeseoController;
 use App\Http\Controllers\NivelesEducativosController;
 use App\Http\Controllers\RecursoController;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\TemaController;
-use App\Http\Controllers\DeseoController;
-use App\Http\Controllers\CategoriaController;
+use Illuminate\Support\Facades\Route;
 
 Route::post('/register', [RegisteredUserController::class, 'store'])
     ->middleware('guest')
     ->name('register');
 
-Route::post('/login', [AuthenticatedSessionController::class, 'store'])
-    ->middleware('guest')
-    ->name('login');
+Route::post('/login', [AuthenticatedSessionController::class, 'store']);
 
 //Route::middleware('auth:sanctum')->get('/user', [ProfileController::class, 'show']);
 Route::middleware('auth:sanctum')->group(function () {
@@ -51,3 +48,7 @@ Route::prefix('recursos/{idRecurso}')->group(function () {
     Route::delete('/', [RecursoController::class, 'destroy']);
 });
 //Route::post('/temas/{idTema}/recursos', [RecursoController::class, 'store']);
+
+Route::get('/sanctum/csrf-cookie', function () {
+    return response()->json('CSRF cookie set')->withCookie(cookie('XSRF-TOKEN', csrf_token(), 120));
+});
