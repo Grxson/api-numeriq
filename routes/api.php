@@ -3,6 +3,7 @@
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\Auth\ProfileController;
 use App\Http\Controllers\Auth\RegisteredUserController;
+use App\Http\Controllers\CarritoController;
 use App\Http\Controllers\CategoriaController;
 use App\Http\Controllers\DeseoController;
 use App\Http\Controllers\NivelesEducativosController;
@@ -51,4 +52,12 @@ Route::prefix('recursos/{idRecurso}')->group(function () {
 
 Route::get('/sanctum/csrf-cookie', function () {
     return response()->json('CSRF cookie set')->withCookie(cookie('XSRF-TOKEN', csrf_token(), 120));
+});
+
+
+Route::middleware('auth:sanctum')->prefix('carrito')->group(function () {
+    Route::get('/', [CarritoController::class, 'index'])->name('carrito.index');
+    Route::post('/agregar', [CarritoController::class, 'agregar'])->name('carrito.agregar');
+    Route::delete('/eliminar/{idTema}', [CarritoController::class, 'eliminar'])->name('carrito.eliminar');
+    Route::post('/comprar', [CarritoController::class, 'comprar'])->name('carrito.comprar');
 });
