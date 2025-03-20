@@ -33,7 +33,11 @@ Route::post('/crearTema', action: [TemaController::class, 'store'])->name('temas
 Route::get('/temas', [TemaController::class, 'index'])->name('temas.index');
 
 
-Route::post('/deseos', [DeseoController::class, 'store'])->name('deseos.store');
+// Ruta para agregar un deseo
+Route::post('/deseos', [DeseoController::class, 'store']);
+
+// Ruta para obtener los deseos de un usuario
+Route::get('/deseos/{idUsuario}', [DeseoController::class, 'index']);
 
 Route::get('/categorias', [CategoriaController::class, 'index'])->name('categorias.index');
 Route::get('/niveles', [NivelesEducativosController::class, 'index']);

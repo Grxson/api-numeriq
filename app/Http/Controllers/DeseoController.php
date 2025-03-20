@@ -10,9 +10,8 @@ class DeseoController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'idUsuario' => 'required|exist:usuario,idUsuario',
-            'idTema' => 'required|exist:temas, idTema',
-            'fechaAgregado' => 'required|date'
+            'idUsuario' => 'required|exists:usuarios,idUsuario',
+            'idTema' => 'required|exists:temas,idTema',
         ]);
 
         // Verifica si ya existe en la lista de deseos
@@ -31,5 +30,17 @@ class DeseoController extends Controller
         ]);
 
         return response()->json(['message' => 'Agregado a la lista de deseos', $deseo], 201);
+    }
+
+    public function index($idUsuario)
+    {
+        $deseos = Deseo::with(['tema']) // colocar " , 'usuario" " para ver los datos del usuario
+        ->where('idUsuario', $idUsuario)
+            ->get();
+        if ($deseos->isEmpty()) {
+            return response()->json(['message' => 'No hay deseos para este usuario.'], 404);
+        }
+
+        return response()->json(['deseos' => $deseos], 201);
     }
 }
