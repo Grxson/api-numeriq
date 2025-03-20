@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 /**
  * @method static find(mixed $idTema)
@@ -12,6 +13,8 @@ use Illuminate\Database\Eloquent\Model;
 class Tema extends Model
 {
     use HasFactory;
+
+    protected $primaryKey = 'idTema';
 
     protected $fillable = [
         'nombreTema',
@@ -28,12 +31,12 @@ class Tema extends Model
         'certificado'
     ];
 
-    public function categoria()
+    public function categoria(): BelongsTo
     {
         return $this->belongsTo(Categoria::class, 'idCategoria');
     }
 
-    public function nivel()
+    public function nivel(): BelongsTo
     {
         return $this->belongsTo(NivelEducativo::class, 'idNivel');
     }

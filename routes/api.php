@@ -56,8 +56,8 @@ Route::get('/sanctum/csrf-cookie', function () {
 
 
 Route::middleware('auth:sanctum')->prefix('carrito')->group(function () {
-    Route::get('/', [CarritoController::class, 'index'])->name('carrito.index');
-    Route::post('/agregar', [CarritoController::class, 'agregar'])->name('carrito.agregar');
-    Route::delete('/eliminar/{idTema}', [CarritoController::class, 'eliminar'])->name('carrito.eliminar');
-    Route::post('/comprar', [CarritoController::class, 'comprar'])->name('carrito.comprar');
+    Route::get('/', [CarritoController::class, 'index']);
+    Route::post('/agregar', [CarritoController::class, 'agregar']);
+    Route::delete('/eliminar/{idTema}', [CarritoController::class, 'eliminar']);
+    Route::post('/vaciar', [CarritoController::class, 'vaciar']);
 });

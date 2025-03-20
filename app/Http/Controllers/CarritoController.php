@@ -2,73 +2,117 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Carrito;
+use App\Models\CarritoDetalle;
 use App\Models\Tema;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use Psr\Container\ContainerExceptionInterface;
-use Psr\Container\NotFoundExceptionInterface;
+use Illuminate\Support\Facades\Auth;
 
-/**
- * @method middleware(string $string)
- */
 class CarritoController extends Controller
 {
-    // Función para asegurar que cada acción sea por un usuario autenticado
-    public function __construct()
-    {
-        $this->middleware('auth:sanctum');
-    }
-
-    /**
-     * @throws ContainerExceptionInterface
-     * @throws NotFoundExceptionInterface
-     */
     public function index(): JsonResponse
     {
-        $carrito = session()->get('carrito', []);
-        return response()->json($carrito);
+        $user = Auth::user();
+
+        if (!empty($user->idUsuario)) {
+            $carrito = Carrito::with('detalles.tema')
+                ->where('idUsuario', $user->idUsuario)
+                ->first();
+        }
+        if (!$carrito) return response()->json(['message' => 'Carrito vacío'], 201);
+
+        return response()->json($carrito, 201);
     }
 
-    /**
-     * @throws ContainerExceptionInterface
-     * @throws NotFoundExceptionInterface
-     */
     public function agregar(Request $request): JsonResponse
     {
-        $idTema = $request->input('idTema');
-        $tema = Tema::find($idTema);
+        $user = Auth::user();
+        $request->validate([
+            'idTema' => 'required|exists:temas,idTema',
+            'cantidad' => 'required|integer|min:1'
+        ]);
 
-        if (!$tema) {
-            return response()->json(['error' => 'Tema no encontrado'], 404);
+        $tema = Tema::find($request->idTema);
+
+        // Buscar o crear el carrito del usuario
+        if (!empty($user->idUsuario)) {
+            $carrito = Carrito::firstOrCreate(
+                ['idUsuario' => $user->idUsuario],
+                ['total' => 0]
+            );
         }
 
-        $carrito = session()->get('carrito', []);
-        $carrito[$idTema] = $tema;
-        session()->put('carrito', $carrito);
+        // Buscar si el tema ya está en el carrito
+        $detalle = CarritoDetalle::where('idCarrito', $carrito->idCarrito)
+            ->where('idTema', $tema->idTema)
+            ->first();
 
-        return response()->json(['success' => 'Tema agregado al carrito']);
+        if ($detalle) {
+            $detalle->cantidad += $request->cantidad;
+            $detalle->precio = $tema->precio * $detalle->cantidad;
+            $detalle->save();
+        } else {
+            CarritoDetalle::create([
+                'idCarrito' => $carrito->idCarrito,
+                'idTema' => $tema->idTema,
+                'cantidad' => $request->cantidad,
+                'precio' => $tema->precio * $request->cantidad
+            ]);
+        }
+        // Recalcular total del carrito
+        $carrito->total = CarritoDetalle::where('idCarrito', $carrito->idCarrito)->sum('precio');
+        $carrito->save();
 
+        return response()->json([
+            'message' => 'Tema agregado al carrito',
+            'carrito' => $carrito
+        ], 201);
     }
 
-    /**
-     * @throws ContainerExceptionInterface
-     * @throws NotFoundExceptionInterface
-     */
     public function eliminar($idTema): JsonResponse
     {
-        $carrito = session()->get('carrito', []);
-        if (isset($carrito[$idTema])) {
-            unset($carrito[$idTema]);
-            session()->put('carrito', $carrito);
+        $user = Auth::user();
+        if (!empty($user->idUsuario)) {
+            $carrito = Carrito::where('idUsuario', $user->idUsuario)->first();
         }
 
-        return response()->json(['success' => 'Tema eliminado del carrito']);
+        if (!$carrito) {
+            return response()->json(['message' => 'Carrito no encontrado'], 404);
+        }
+
+        $detalle = CarritoDetalle::where('idCarrito', $carrito->idCarrito)
+            ->where('idTema', $idTema)
+            ->first();
+
+        if (!$detalle) {
+            return response()->json(['message' => 'Tema no encontrado en el carrito'], 404);
+        }
+
+        $detalle->delete();
+
+        // Recalcular total
+        $carrito->total = CarritoDetalle::where('idCarrito', $carrito->idCarrito)->sum('precio');
+        $carrito->save();
+
+        return response()->json(['message' => 'Tema eliminado del carrito', 'carrito' => $carrito], 201);
     }
 
-    public function comprar(): JsonResponse
+
+    public function vaciar(): JsonResponse
     {
-        session()->forget('carrito');
-        return response()->json(['success' => 'Compra realizada con éxito']);
+        $user = Auth::user();
+        if (!empty($user->idUsuario)) {
+            $carrito = Carrito::where('idUsuario', $user->idUsuario)->first();
+        }
+
+        if ($carrito) {
+            CarritoDetalle::where('idCarrito', $carrito->idCarrito)->delete();
+            $carrito->total = 0;
+            $carrito->save();
+        }
+
+        return response()->json(['message' => 'Carrito vaciado'], 201);
     }
 }
 
