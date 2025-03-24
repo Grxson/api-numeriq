@@ -8,12 +8,8 @@ use Illuminate\Http\Request;
 
 class TemaController extends Controller
 {
-<<<<<<< HEAD
-    public function index(Request $request)
-=======
 
     public function index(Request $request): JsonResponse
->>>>>>> ff7492ce27b82dc55719b7abbf65cf2e96c4bcaf
     {
         // Creación de los filtrados
         $categoria = $request->input('categoria');
@@ -41,11 +37,7 @@ class TemaController extends Controller
         return response()->json($temas, 201);
     }
 
-<<<<<<< HEAD
-    public function store(Request $request)
-=======
     public function store(Request $request): JsonResponse
->>>>>>> ff7492ce27b82dc55719b7abbf65cf2e96c4bcaf
     {
         $request->validate([
             'nombreTema' => 'required|string|max:255',

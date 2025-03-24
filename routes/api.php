@@ -33,18 +33,15 @@ Route::post('/crearTema', action: [TemaController::class, 'store'])->name('temas
 Route::get('/temas', [TemaController::class, 'index'])->name('temas.index');
 
 
-<<<<<<< HEAD
 Route::post('/deseos', [DeseoController::class, 'store']);
 Route::get('/deseos/usuario/{idUsuario}', [DeseoController::class, 'getDeseosByUsuario']);
 Route::delete('/deseos/{idDeseo}', [DeseoController::class, 'destroy']);
-=======
+
 // Ruta para agregar un deseo
 Route::post('/deseos', [DeseoController::class, 'store']);
 
 // Ruta para obtener los deseos de un usuario
 Route::get('/deseos/{idUsuario}', [DeseoController::class, 'index']);
->>>>>>> ff7492ce27b82dc55719b7abbf65cf2e96c4bcaf
-
 Route::get('/categorias', [CategoriaController::class, 'index'])->name('categorias.index');
 Route::get('/niveles', [NivelesEducativosController::class, 'index']);
 
