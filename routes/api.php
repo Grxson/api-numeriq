@@ -38,6 +38,14 @@ Route::post('/deseos', [DeseoController::class, 'store']);
 Route::get('/deseos/usuario/{idUsuario}', [DeseoController::class, 'getDeseosByUsuario']);
 Route::delete('/deseos/{idDeseo}', [DeseoController::class, 'destroy']);
 
+<<<<<<< HEAD
+=======
+// Ruta para agregar un deseo
+Route::post('/deseos', [DeseoController::class, 'store']);
+
+// Ruta para obtener los deseos de un usuario
+Route::get('/deseos/{idUsuario}', [DeseoController::class, 'index']);
+>>>>>>> f0c476b542a2ac095e2a85812737a5bd88ee3464
 Route::get('/categorias', [CategoriaController::class, 'index'])->name('categorias.index');
 Route::get('/niveles', [NivelesEducativosController::class, 'index']);
 

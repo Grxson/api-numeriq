@@ -13,13 +13,8 @@ class DeseoController extends Controller
     {
 
         $request->validate([
-<<<<<<< HEAD
             'idUsuario' => 'required|exists:usuario,idUsuario',
-            'idTema' => 'required|exists:temas,idTema'
-=======
-            'idUsuario' => 'required|exists:usuarios,idUsuario',
             'idTema' => 'required|exists:temas,idTema',
->>>>>>> ff7492ce27b82dc55719b7abbf65cf2e96c4bcaf
         ]);
 
         // Verificar si ya existe el deseo
@@ -61,7 +56,7 @@ class DeseoController extends Controller
             'message' => 'Lista de deseos',
             'deseos' => $deseos
         ], 200);
-        
+
     }
 
     // Eliminar un deseo específico
