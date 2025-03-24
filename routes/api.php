@@ -35,7 +35,9 @@ Route::post('/crearTema', action: [TemaController::class, 'store'])->name('temas
 Route::get('/temas', [TemaController::class, 'index'])->name('temas.index');
 
 
-Route::post('/deseos', [DeseoController::class, 'store'])->name('deseos.store');
+Route::post('/deseos', [DeseoController::class, 'store']);
+Route::get('/deseos/usuario/{idUsuario}', [DeseoController::class, 'getDeseosByUsuario']);
+Route::delete('/deseos/{idDeseo}', [DeseoController::class, 'destroy']);
 
 Route::get('/categorias', [CategoriaController::class, 'index'])->name('categorias.index');
 Route::get('/niveles', [NivelesEducativosController::class, 'index']);

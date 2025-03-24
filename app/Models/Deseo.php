@@ -12,7 +12,7 @@ class Deseo extends Model
     protected $table = 'deseos';
     protected $primaryKey = 'idDeseo';
 
-    protected $fillable = ['idUsuario', 'idTema', 'fechaAgregado'];
+    protected $fillable = ['idUsuario', 'idTema'];
 
     public function usuario()
     {

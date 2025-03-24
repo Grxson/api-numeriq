@@ -18,4 +18,11 @@ class Categoria extends Model
     {
         return $this->hasMany(Tema::class, 'idCategoria');
     }
+
+    public function index()
+    {
+        // Obtener todas las categorías
+        $categorias = Categoria::all();
+        return response()->json($categorias);
+    }
 }

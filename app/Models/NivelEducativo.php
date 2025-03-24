@@ -18,4 +18,11 @@ class NivelEducativo extends Model
     {
         return $this->hasMany(Tema::class, 'idNivel');
     }
+
+    public function index()
+    {
+        // Obtener todos los niveles educativos
+        $niveles = NivelEducativo::all();
+        return response()->json($niveles);
+    }
 }

@@ -12,9 +12,7 @@ class Tema extends Model
     protected $fillable = [
         'nombreTema',
         'descripcionTema',
-        'imagenTema',
-        'numUsuarios',
-        'likes',
+        'miniaturaTema',
         'precio',
         'idCategoria',
         'idNivel',
@@ -32,5 +30,10 @@ class Tema extends Model
     public function nivel()
     {
         return $this->belongsTo(NivelEducativo::class, 'idNivel');
+    }
+
+    public function deseos()
+    {
+        return $this->hasMany(Deseo::class, 'idTema');
     }
 }
