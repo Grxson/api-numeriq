@@ -13,8 +13,13 @@ class DeseoController extends Controller
     {
 
         $request->validate([
+<<<<<<< HEAD
             'idUsuario' => 'required|exists:usuario,idUsuario',
             'idTema' => 'required|exists:temas,idTema'
+=======
+            'idUsuario' => 'required|exists:usuarios,idUsuario',
+            'idTema' => 'required|exists:temas,idTema',
+>>>>>>> ff7492ce27b82dc55719b7abbf65cf2e96c4bcaf
         ]);
 
         // Verificar si ya existe el deseo
@@ -71,5 +76,17 @@ class DeseoController extends Controller
         $deseo->delete();
 
         return response()->json(['message' => 'Deseo eliminado correctamente'], 200);
+    }
+
+    public function index($idUsuario)
+    {
+        $deseos = Deseo::with(['tema']) // colocar " , 'usuario" " para ver los datos del usuario
+        ->where('idUsuario', $idUsuario)
+            ->get();
+        if ($deseos->isEmpty()) {
+            return response()->json(['message' => 'No hay deseos para este usuario.'], 404);
+        }
+
+        return response()->json(['deseos' => $deseos], 201);
     }
 }

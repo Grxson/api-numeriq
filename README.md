@@ -51,6 +51,17 @@ DB_PASSWORD=Grxson@Gael_1
 ```
 El servidor estará disponible en `http://127.0.0.1:8000/`.
 
+### 8. Modificar VerifiCsrfToken
+
+Navegar entre los archivos del proyecto hasta encontrar "VerifiCsrfToken"
+
+### Ruta: api-numeriq\vendor\laravel\framework\src\Illuminate\Foundation\Http\Middleware\VerifiCsrfToken
+
+````angular2html
+Agregar las rutas a desviar de la verificación de csrfToken, en este caso api:
+
+protected $except = ['api/*'];
+````
 ## Comandos útiles
 
 - **Limpiar caché**
