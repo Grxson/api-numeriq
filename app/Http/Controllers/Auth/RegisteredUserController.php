@@ -43,5 +43,12 @@ class RegisteredUserController extends Controller
 
         return response()->json(['message' => 'Usuario creado Correctamente'], 201);
     }
+
+    public function index()
+    {
+        $usuarios = User::all();
+        return response()->json($usuarios);
+    }
+
 }
 

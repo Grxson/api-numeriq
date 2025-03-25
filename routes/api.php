@@ -15,6 +15,8 @@ Route::post('/register', [RegisteredUserController::class, 'store'])
     ->middleware('guest')
     ->name('register');
 
+Route::get('/usuarios', [RegisteredUserController::class, 'index']);
+
 Route::post('/login', [AuthenticatedSessionController::class, 'store']);
 
 //Route::middleware('auth:sanctum')->get('/user', [ProfileController::class, 'show']);
@@ -22,7 +24,10 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/perfil', [ProfileController::class, 'show']);
     Route::put('/perfil', [ProfileController::class, 'update']);
     Route::delete('/perfil', [ProfileController::class, 'destroy']);
+    
 });
+
+Route::put('/usuarios/{id}', [ProfileController::class, 'updateRole']);
 
 
 //Route::middleware(['auth:sanctum'])->get('/user', function (Request $request) {
@@ -38,14 +43,11 @@ Route::post('/deseos', [DeseoController::class, 'store']);
 Route::get('/deseos/usuario/{idUsuario}', [DeseoController::class, 'getDeseosByUsuario']);
 Route::delete('/deseos/{idDeseo}', [DeseoController::class, 'destroy']);
 
-<<<<<<< HEAD
-=======
 // Ruta para agregar un deseo
 Route::post('/deseos', [DeseoController::class, 'store']);
 
 // Ruta para obtener los deseos de un usuario
 Route::get('/deseos/{idUsuario}', [DeseoController::class, 'index']);
->>>>>>> f0c476b542a2ac095e2a85812737a5bd88ee3464
 Route::get('/categorias', [CategoriaController::class, 'index'])->name('categorias.index');
 Route::get('/niveles', [NivelesEducativosController::class, 'index']);
 

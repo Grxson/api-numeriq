@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
+use App\Models\User;
 
 class ProfileController extends Controller
 {
@@ -18,6 +19,9 @@ class ProfileController extends Controller
 
     public function update(Request $request){
         $user = Auth::user();
+        if (!$user instanceof User) {
+            return response()->json(['message' => 'User not found'], 404);
+        }
 
         // validación de campos
         $request->validate([
@@ -74,10 +78,26 @@ class ProfileController extends Controller
             Storage::disk('public')->delete($path);
         }
 
-        $user->delete();
+        User::destroy($user->id);
 
         return response()->json([
             'message' => 'Cuenta eliminada correctamente'
+        ]);
+    }
+
+    public function updateRole(Request $request, $id)
+    {
+        $request->validate([
+            'rol' => 'required|in:estudiante,profesor', // Permitir solo los roles disponibles
+        ]);
+
+        $user = User::findOrFail($id);
+        $user->rol = $request->rol;
+        $user->save();
+
+        return response()->json([
+            'message' => 'Rol actualizado correctamente',
+            'user' => $user,
         ]);
     }
 
