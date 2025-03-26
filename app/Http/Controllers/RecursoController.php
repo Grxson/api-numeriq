@@ -28,82 +28,70 @@ class RecursoController extends Controller
             ], 500);
         }
     }
+    
     public function store(Request $request, $idTema){
         try{
-            // Validar que el tema exista
             $tema = Tema::where('idTema', $idTema)->firstOrFail();
-            // Validar el tipo de recurso
-            $request ->validate([
+    
+            // Validación básica
+            $request->validate([
                 'tipoRecurso' => 'required|string|in:Video,Ejercicio,Recurso Adicional,Examen Diagnóstico,Examen Final',
                 'tituloRecurso' => 'required|string|max:255',
                 'descripcionRecurso' => 'nullable|string',
+                'enlaceRecurso' => 'nullable|url', // Nueva validación para URL externa
             ]);
-            $rutaArchivo = null; // Variable para almacenar la ruta del archivo
-
-            // En caso de que sea "video"
+    
+            $rutaArchivo = null;
+    
+            // Si el recurso es un video
             if ($request->tipoRecurso === 'Video') {
                 $request->validate([
-                    'video' => 'required|mimes:mp4,avi,mov|max:50480', // Hasta 50MB
-                    'duracionVideo' => 'required|integer|min:1', // Minutos
+                    'duracionVideo' => 'required|integer|min:1'
                 ]);
+    
                 if ($request->hasFile('video')) {
                     $rutaArchivo = $request->file('video')->store('videos', 'public');
+                } elseif ($request->enlaceRecurso) {
+                    // Si no se subió archivo, pero hay una URL, la guardamos
+                    $rutaArchivo = $request->enlaceRecurso;
                 } else {
-                    return response()->json(['error' => 'Error al subir el video'], 400);
+                    return response()->json(['error' => 'Debe subir un video o proporcionar una URL'], 400);
                 }
             }
-            // Si es EJERCICIO
-            elseif ($request->tipoRecurso === 'Ejercicio') {
-                $request->validate([
-                    'archivo' => 'required|mimes:zip,pdf,docx,txt,pptx|max:10240'
-                ]);
-                if($request->hasFile('archivo')){
-                    $rutaArchivo = $request->file('archivo')->store('ejercicios', 'public');
+            // Si el recurso es un archivo adjunto (Ejercicio o Recurso Adicional)
+            elseif (in_array($request->tipoRecurso, ['Ejercicio', 'Recurso Adicional'])) {
+                if ($request->hasFile('archivo')) {
+                    $rutaArchivo = $request->file('archivo')->store('recursos', 'public');
+                } elseif ($request->enlaceRecurso) {
+                    $rutaArchivo = $request->enlaceRecurso;
                 } else {
-                    return response()->json(['error' => 'Error al subir el archivo'], 400);
+                    return response()->json(['error' => 'Debe subir un archivo o proporcionar una URL'], 400);
                 }
             }
-            // Si es RecursoAdicional
-            elseif($request->tipoRecurso === 'Recurso Adicional') {
-                $request->validate([
-                    'archivo' => 'required|mimes:zip,pdf,docx,txt,pptx|max:10240'
-                ]);
-                if($request->hasFile('archivo')){
-                    $rutaArchivo = $request->file('archivo')->store('recursos_adicionales', 'public');
-                } else {
-                    return response()->json(['error' => 'Error al subir el recurso adicional'], 400);
-                }
-            }
-
-            // Examenes
-
-
-            // Generar la url publica
-            $urlRecurso = $rutaArchivo ? asset('storage/' . $rutaArchivo) : null;
-
-            // Crear el recurso
+    
+            // Guardar en la BD
             $recurso = new Recurso();
             $recurso->idTema = $idTema;
             $recurso->tipoRecurso = $request->tipoRecurso;
             $recurso->tituloRecurso = $request->tituloRecurso;
             $recurso->descripcionRecurso = $request->descripcionRecurso;
-            $recurso->enlaceREcurso = $urlRecurso;
+            $recurso->enlaceRecurso = $rutaArchivo ? asset('storage/' . $rutaArchivo) : null;
             $recurso->duracionVideo = $request->tipoRecurso === 'Video' ? $request->duracionVideo : null;
             $recurso->save();
-
+    
             return response()->json([
                 'message' => 'Recurso agregado correctamente',
                 'recurso' => $recurso
             ]);
-
-
-        }catch(\Exception $e){
+    
+        } catch (\Exception $e) {
             return response()->json([
                 'error' => 'Error al agregar el recurso',
                 'message' => $e->getMessage()
             ], 500);
         }
     }
+    
 
     public function update(Request $request, $idRecurso){
         try{
