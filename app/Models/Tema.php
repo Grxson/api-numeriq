@@ -43,4 +43,9 @@ class Tema extends Model
     {
         return $this->hasMany(Deseo::class, 'idTema');
     }
+
+    public function recursos()
+    {
+        return $this->hasMany(Recurso::class, 'idTema');
+    }
 }

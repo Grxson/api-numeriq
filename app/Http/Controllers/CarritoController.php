@@ -30,7 +30,7 @@ class CarritoController extends Controller
         $user = Auth::user();
         $request->validate([
             'idTema' => 'required|exists:temas,idTema',
-            'cantidad' => 'required|integer|min:1'
+            'cantidad' => 'required|integer|min:1|max:1'
         ]);
 
         $tema = Tema::find($request->idTema);
@@ -49,9 +49,9 @@ class CarritoController extends Controller
             ->first();
 
         if ($detalle) {
-            $detalle->cantidad += $request->cantidad;
-            $detalle->precio = $tema->precio * $detalle->cantidad;
-            $detalle->save();
+            return response()->json([
+                'message' => 'Este tema ya está en el carrito'
+            ], 400);
         } else {
             CarritoDetalle::create([
                 'idCarrito' => $carrito->idCarrito,

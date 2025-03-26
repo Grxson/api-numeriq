@@ -25,4 +25,10 @@ class Recurso extends Model
     public function tema(){
         return $this->belongsTo(Tema::class, 'idTema');
     }
+
+    public function usuarios()
+    {
+        return $this->belongsToMany(User::class, 'recurso_usuario', 'idRecurso', 'idUsuario')
+            ->withPivot('completado');
+    }
 }

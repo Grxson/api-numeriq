@@ -55,4 +55,17 @@ class User extends Authenticatable
         ];
     }
     public $timestamps = true;
+
+
+    public function recursos()
+    {
+        return $this->belongsToMany(Recurso::class, 'recurso_usuario', 'idUsuario', 'idRecurso')
+            ->withPivot('completado')
+            ->withTimestamps();
+    }
+
+    public function recursosCompletados()
+    {
+        return $this->recursos()->wherePivot('completado', 1);
+    }
 }
