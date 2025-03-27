@@ -31,9 +31,11 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/perfil', [ProfileController::class, 'show']);
     Route::put('/perfil', [ProfileController::class, 'update']);
     Route::delete('/perfil', [ProfileController::class, 'destroy']);
+    
+    
     // Para inscribirse a un tema
     Route::post('/inscribir/{idTema}', [InscripcionController::class, 'inscribirEnTema']);
-
+    Route::get('/inscripciones', [InscripcionController::class, 'getInscripciones']);
     // Para la barra de progreso de un tema
     Route::get('/progreso/{idTema}', [ProgresoController::class, 'obtenerProgreso']);
     Route::post('/progreso/{idTema}', [ProgresoController::class, 'actualizarProgreso']);

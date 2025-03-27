@@ -39,4 +39,17 @@ class InscripcionController extends Controller
             'inscripcion' => $inscripcion
         ], 201);
     }
+
+    public function getInscripciones(): JsonResponse
+{
+    $user = Auth::user();
+
+    // Obtener inscripciones del usuario junto con la información del tema
+    $inscripciones = Inscripcions::where('idUsuario', $user->idUsuario)
+        ->with('tema') // Asegúrate de que exista la relación en el modelo
+        ->get();
+
+    return response()->json($inscripciones, 200);
+}
+
 }

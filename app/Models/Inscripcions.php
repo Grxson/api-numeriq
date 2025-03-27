@@ -26,7 +26,7 @@ class Inscripcions extends Model
 
     public function tema()
     {
-        return $this->belongsTo(Tema::class, 'idTema');
+        return $this->belongsTo(Tema::class, 'idTema', 'idTema');
     }
 
     public function usuario()
