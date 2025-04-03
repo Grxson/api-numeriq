@@ -15,8 +15,8 @@ Sigue estos pasos para instalar el proyecto en tu máquina local:
 
 ### 1. Clonar el repositorio
 ```bash
-  git clone https://github.com/Grxson/api-numeriq.git
-  cd api-numeriq
+  git clone https://github.com/Grxson/apiNumeriq.git
+  cd apiNumeriq
 ```
 
 ### 2. Instalar dependencias de PHP
@@ -32,11 +32,11 @@ Copia el archivo de configuración de entorno y edítalo según tu configuració
 Edita el archivo `.env` y configura la conexión a la base de datos:
 ```ini
 DB_CONNECTION=mysql
-DB_HOST=193.203.166.236
+DB_HOST=127.0.0.1
 DB_PORT=3306
-DB_DATABASE=u707936654_NumerIQ
-DB_USERNAME=u707936654_estadia
-DB_PASSWORD=Grxson@Gael_1
+DB_DATABASE= <Nombre de la base de datos>
+DB_USERNAME= <Nombre de usuario>
+DB_PASSWORD= <Contraseña de la base de datos>
 ```
 
 ### 4. Generar la clave de la aplicación
